@@ -1,4 +1,4 @@
-# Book Reader
+# Book Reader :books:
 ### Проект:
 <p>Приложение позволяющее преобразовывать текстовый формат книг определенного шаблона в формат JSON</p>
 
@@ -23,7 +23,7 @@ his fame was greater than his popularity
 ###internal combustion engine
 ```
 
-Спецификация API доступна через [Swagger](https://swagger.io/tools/swagger-editor/)
+Спецификация API доступна через [Swagger](https://swagger.io/tools/swagger-editor/) после запуска приложения
 ```http request
 http://localhost:8080/swagger-ui/index.html
 ```
