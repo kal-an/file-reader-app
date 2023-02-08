@@ -1,9 +1,12 @@
 package ru.kalan.filereaderapp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.kalan.filereaderapp.exception.IncorrectFile;
+import ru.kalan.filereaderapp.model.Book;
 import ru.kalan.filereaderapp.util.MultiPartParser;
 
 import java.io.File;
@@ -17,11 +20,22 @@ public class MultiPartParserTest {
     @DisplayName("Создание книги")
     public void createBook_ok() {
         String fileName = "src/test/resources/example1.txt";
+
+        String json = "{\"title\":\"GREATEST MAN IN ALIVE\",\"chapters\":[{\"title\":\"Chapter one\"," +
+                "\"description\":\"this story about awesome dude that call name is Jack\",\"subChapter\":" +
+                "{\"title\":\"Jack's characteristics\",\"property\":{\"weight\":\"190 pounds\",\"height\":\"71 inch\"}}}" +
+                ",{\"title\":\"Chapter two\"" +
+                ",\"description\":\"Jack was most famous man in alive his fame was greater than his popularity\"" +
+                ",\"subChapter\":{\"title\":\"Jack's patents\",\"property\":[\"mosquito net\",\"x-ray\"," +
+                "\"internal combustion engine\"]}}]}";
         File file = new File(fileName);
         try {
             InputStream stream = new FileInputStream(file);
-            MultiPartParser.createBook(stream);
-        } catch (FileNotFoundException e) {
+            Book book = MultiPartParser.createBook(stream);
+            ObjectMapper mapper = new ObjectMapper();
+            String serialBook =  mapper.writeValueAsString(book);
+            Assertions.assertEquals(json, serialBook);
+        } catch (FileNotFoundException | JsonProcessingException e) {
             e.printStackTrace();
         }
     }
