@@ -1,5 +1,6 @@
 package ru.kalan.filereaderapp.util;
 
+import ru.kalan.filereaderapp.exception.IncorrectFile;
 import ru.kalan.filereaderapp.model.Book;
 import ru.kalan.filereaderapp.model.Chapter;
 import ru.kalan.filereaderapp.model.SubChapter;
@@ -16,12 +17,18 @@ import java.util.Map;
 
 public class MultiPartParser {
 
+    private final static int LEVEL_0 = 0;
     private final static int LEVEL_1 = 1;
     private final static int LEVEL_2 = 2;
     private final static int LEVEL_3 = 3;
     private final static String TAG = "#";
     private final static String COLON = ":";
 
+    /**
+     * Создание книги
+     * @param stream {@link InputStream}
+     * @return {@link Book}
+     */
     public static Book createBook(InputStream stream) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
@@ -34,14 +41,20 @@ public class MultiPartParser {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
+        if (lines.isEmpty()) {
+            throw new IncorrectFile("File is empty");
+        }
         String title = lines.remove(0);
+        if (title.startsWith("#")) {
+            throw new IncorrectFile("File is incorrect");
+        }
         Book book = new Book(title);
         Chapter chapter = null;
         SubChapter subChapter = null;
 
         for (String line : lines) {
             String curTag = line.substring(0, line.lastIndexOf(TAG) + 1);
+
             // заполняем раздел
             if (curTag.length() == LEVEL_1) {
                 chapter = new Chapter();
