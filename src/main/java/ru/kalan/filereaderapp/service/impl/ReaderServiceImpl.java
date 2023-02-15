@@ -20,7 +20,7 @@ public class ReaderServiceImpl implements ReaderService {
             book = MultiPartParser.createBook(file.getInputStream());
             log.info("Created book {}", book.getTitle());
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            log.error("Exception {}", e.getMessage());
         }
         return book;
     }
