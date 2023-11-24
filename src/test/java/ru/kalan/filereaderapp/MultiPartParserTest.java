@@ -1,6 +1,7 @@
 package ru.kalan.filereaderapp;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -33,8 +34,11 @@ public class MultiPartParserTest {
             InputStream stream = new FileInputStream(file);
             Book book = MultiPartParser.createBook(stream);
             ObjectMapper mapper = new ObjectMapper();
-            String serialBook =  mapper.writeValueAsString(book);
-            Assertions.assertEquals(json, serialBook);
+
+            // Deserialize JSON strings to JsonNode objects for comparison
+            JsonNode tree1 = mapper.readTree(json);
+            JsonNode tree2 = mapper.readTree(mapper.writeValueAsString(book));
+            Assertions.assertEquals(tree1, tree2);
         } catch (FileNotFoundException | JsonProcessingException e) {
             e.printStackTrace();
         }
