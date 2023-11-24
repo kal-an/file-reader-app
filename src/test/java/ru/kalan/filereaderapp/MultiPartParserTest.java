@@ -34,8 +34,6 @@ public class MultiPartParserTest {
             InputStream stream = new FileInputStream(file);
             Book book = MultiPartParser.createBook(stream);
             ObjectMapper mapper = new ObjectMapper();
-
-            // Deserialize JSON strings to JsonNode objects for comparison
             JsonNode tree1 = mapper.readTree(json);
             JsonNode tree2 = mapper.readTree(mapper.writeValueAsString(book));
             Assertions.assertEquals(tree1, tree2);
